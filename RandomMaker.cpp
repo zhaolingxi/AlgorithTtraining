@@ -48,3 +48,11 @@ bool getRandomArraySafe(std::vector<int>& ioArray, int minValue, int maxValue,
 	res = true;
 	return res;
 }
+
+int getRandomNum(int minValue, int maxValue)
+{
+	std::random_device rd;//产生种子
+	std::mt19937 gen(rd());//梅森引擎
+	std::uniform_int_distribution<int> array(minValue, maxValue);
+	return array(gen);
+}
