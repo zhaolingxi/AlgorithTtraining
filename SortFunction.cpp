@@ -2,6 +2,8 @@
 #include"MathTool.h"
 #include"MathToolcpp.hpp"
 #include "RandomMaker.h"
+#include"limits.h"
+#include<cmath>
 
 //冒泡排序【给值找下标】
 //时间复杂度：O(n^2)
@@ -146,6 +148,36 @@ bool sort_Heap(std::vector<int>& ioArray)
 	return res;
 }
 
+//桶排序
+//时间复杂度：O(n)依赖具体数据与场景
+//空间复杂度：O(n)依赖具体数据与场景
+//算法稳定度：稳定
+//排序思想：利用划分区域的分类方式代替比较分类
+
+
+//基数排序：
+//	以不同元素的区域，划定桶处理的元素范围
+//	使用了词频表完成如桶与出桶
+bool sort_Bucket(std::vector<int>& ioArray)
+{
+	bool res = false;
+	if (ioArray.size() < 2) return res;
+	radixSort(ioArray, 0, ioArray.size()-1, maxbits(ioArray));
+	res = true;
+	return res;
+}
+
+//计数排序：
+//	对每一个元素可能出现的值进行频率划分
+bool sort_Bucket2(std::vector<int>& ioArray)
+{
+	bool res = false;
+	if (ioArray.size() < 2) return res;
+	countSort(ioArray, 0, ioArray.size() - 1);
+	res = true;
+	return res;
+}
+
 
 
 
@@ -159,8 +191,6 @@ int processMerge(std::vector<int>& ioArray, int left, int right)
 	merge(ioArray,left,mid,right);
 	return __max(leftMax,rightMax);
 }
-
-
 
 void processQuick3(std::vector<int>& ioArray, int left, int right)
 {
@@ -246,5 +276,61 @@ void heapinsert(std::vector<int>& ioArray, int index)
 	{
 		Swap(ioArray[index], ioArray[(index - 1) / 2]);
 		index = (index - 1) / 2;
+	}
+}
+
+void radixSort(std::vector<int>& ioArray, int left, int right, int digit)
+{
+	static int radix = 10;
+	int i = 0, j = 0;
+	//准备足够的辅助空间
+	std::vector<int> tempvec(right-left+1);
+	for (size_t d = 1; d <= digit; d++)
+	{
+		//10个空间
+		//count[0]当前位是零的数
+		//count[1]当前位是0和1的数
+		//count[n]当前位是0到n的数
+		std::vector<int> count(radix);
+		for (size_t i = left; i <= right; i++)
+		{
+			j = getDigit(ioArray[i],d);
+			count[j]++;
+		}
+		for (size_t i = 1; i < radix; i++)
+		{
+			count[i] = count[i] + count[i - 1];
+		}
+		for (int i = right; i >= left; i--)
+		{
+			j = getDigit(ioArray[i], d);
+			tempvec[count[j] - 1] = ioArray[i];
+			count[j]--;
+		}
+		for (i = left, j = 0; i <= right; i++, j++) {
+			ioArray[i] = tempvec[j];
+		}
+	}
+}
+
+void countSort(std::vector<int>& ioArray, int left, int right)
+{
+	int max = INT_MIN;
+	for (size_t i = left; i < right; i++)
+	{
+		max = __max(max, ioArray[i]);
+	}
+	std::vector<int> tempvec(max+1);//计数排序的计数是每一个数值都需要一个计数位
+	for (int i = left; i < right; i++)
+	{
+		tempvec[ioArray[i]]++;
+	}
+	int i = left;
+	for (int j = 0; j < tempvec.size(); j++) 
+	{
+		while (tempvec[j] != 0) //这里要求是不为零数才行，实际使用中把它视为不等于初始值就行
+		{
+			ioArray[i++] = j;
+		}
 	}
 }

@@ -61,6 +61,12 @@ bool sort_Quick3(std::vector<int>& ioArray);
 //	所以它的复杂度还可以
 bool sort_Heap(std::vector<int>& ioArray);
 
+//桶排序【基数排序】
+bool sort_Bucket(std::vector<int>& ioArray);
+
+//桶排序【计数排序】
+bool sort_Bucket2(std::vector<int>& ioArray);
+
 
 //希尔排序（不重要，一般就存在于课本和考试上）
 
@@ -79,3 +85,10 @@ void heapify(std::vector<int>& ioArray, int index, int heapsize);
 
 //维护堆结构（向上）
 void heapinsert(std::vector<int>& ioArray, int index);
+
+//桶排序的辅助函数
+
+
+
+void radixSort(std::vector<int>& ioArray,int left,int right,int digit);
+void countSort(std::vector<int>& ioArray, int left, int right);
